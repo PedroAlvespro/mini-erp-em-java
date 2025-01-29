@@ -1,0 +1,4 @@
+Nome do produto: arroz
+Descricao do Produto: comida
+Preco do produto: 90
+quantidade disponivel do produto: 32323.0
