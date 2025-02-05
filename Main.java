@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 import controllers.EstoqueController;
 import controllers.UsuarioController;
+import exceptions.UsuarioException;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,10 +17,15 @@ public class Main {
         response = sc.nextInt();
         System.out.println();
 
-
+        //Todo o Sistema de Estoque deve ser acessado apenas por funcionários
         if (response == 1) {
             EstoqueController estoque = new EstoqueController();
-            estoque.EstoqueMenu();
+            try {
+                estoque.EstoqueMenu();
+            } catch (UsuarioException e) {
+                e.printStackTrace();
+            }
+
         } else if (response == 3){
               UsuarioController usuarioController = new UsuarioController();
               usuarioController.menuUsuario();

@@ -33,7 +33,7 @@ public class UsuarioController extends UsuarioService {
             }
 
         } while (response != 0);
-        sc.close();
+        
     }
 
     private void cadastroUsuario(Scanner scanner) {

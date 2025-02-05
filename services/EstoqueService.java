@@ -1,7 +1,9 @@
 package services;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -61,11 +63,89 @@ public abstract class EstoqueService implements IEstoque{
                 }
     }
 
+    /*Precisa cadastrar um funcionário*/ 
+
 
     public Boolean ControleProduto(int idlote,int response) throws EstoqueException{
         //altera arquivo de texto selecionado, altera quantos tem disponível, de determinado lote.
-       if(response == 1) return true;
-       if(response == 2) return false;
+            if(response != 1 || response != 2 ) throw new EstoqueException("Resposta inválida !");
+        
+
+            String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
+            File pasta = new File(pastaPath);
+            if (!pasta.exists()) {
+                 throw new EstoqueException("Pasta de produtos não encontrada.");
+            }
+
+            File arquivo = null;
+            for (File file : pasta.listFiles()) {
+                if (file.getName().contains(String.valueOf(idlote))) {
+                    arquivo = file;
+                    break;
+                }
+            }
+
+            if (arquivo == null) {
+                throw new EstoqueException("Produto com id de lote " + idlote + " não encontrado.");
+            }
+
+            StringBuilder conteudo = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+            conteudo.append(linha).append(System.lineSeparator());
+            }
+            } catch (IOException e) {
+             throw new EstoqueException("Erro ao ler o arquivo: " + e.getMessage());
+            }
+
+            String[] linhas = conteudo.toString().split(System.lineSeparator());
+
+            boolean encontradoQuantidade = false;
+
+            for (int i = 0; i < linhas.length; i++) {
+                if (linhas[i].contains("quantidade disponivel do produto")) {
+                    // Localiza a linha com a quantidade
+                    String quantidadeStr = linhas[i].split(":")[1].trim();
+                    double quantidade = Double.parseDouble(quantidadeStr);
+        
+                    // Se a resposta for 1 (aprovar), diminui a quantidade em 1
+                    if (response == 1) {
+                        quantidade -= 1;
+                        if (quantidade < 0) {
+                            throw new EstoqueException("Quantidade insuficiente de produto para aprovação.");
+                        }
+                    }
+                    // Se a resposta for 2 (rejeitar), diminui a quantidade em 1
+                    if (response == 2) {
+                        quantidade -= 1;
+                        if (quantidade < 0) {
+                            throw new EstoqueException("Quantidade insuficiente de produto para rejeição.");
+                        }
+                    }
+        
+                    // Atualiza a linha de quantidade
+                    linhas[i] = "quantidade disponivel do produto: " + quantidade;
+                    encontradoQuantidade = true;
+                    break;
+                }
+            }
+        
+            if (!encontradoQuantidade) {
+                throw new EstoqueException("Linha de quantidade não encontrada no arquivo.");
+            }
+        
+            // Regrava o conteúdo atualizado no arquivo
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))) {
+                for (String linha : linhas) {
+                    writer.write(linha);
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                throw new EstoqueException("Erro ao escrever no arquivo: " + e.getMessage());
+            }
+        
+            return true;
 
     }
 

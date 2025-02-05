@@ -1,0 +1,3 @@
+Nickname: Pedro
+Senha: 12345678
+Tipo de usuário: Funcionário
