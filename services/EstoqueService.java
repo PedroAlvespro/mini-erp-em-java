@@ -54,5 +54,10 @@ public abstract class EstoqueService implements IEstoque{
     }
 
 
+    public void ControleProduto(String nome, String descricao, String preco, double quantidade) throws EstoqueException{
+        //altera arquivo de texto selecionado
+    }
+
+
    
 }
