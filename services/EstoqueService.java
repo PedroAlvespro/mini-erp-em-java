@@ -5,13 +5,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 import exceptions.EstoqueException;
 import interfaces.IEstoque;
 
 public abstract class EstoqueService implements IEstoque{
 
     
-    public void CadastramentoProduto(String nome, String descricao, String preco, double quantidade) throws EstoqueException{
+    public void CadastramentoProduto(int idlote,String nome, String descricao, float preco, double quantidade) throws EstoqueException{
+
+        //Funcionário aprova ou nao o id do lote
+        if(idlote < 0) throw new EstoqueException("in de lote menor do que 0");
 
         if (nome == null || nome.trim().isEmpty()) {
             throw new EstoqueException ("Nome do produto inválido.");
@@ -19,7 +23,7 @@ public abstract class EstoqueService implements IEstoque{
         if (descricao == null || descricao.trim().isEmpty()) {
             throw new EstoqueException("Descrição do produto inválida.");
         }
-        if (preco == null || preco.trim().isEmpty()) {
+        if (preco < 0) {
             throw new EstoqueException("Preço do produto inválido.");
         }
         if (quantidade < 0) {
@@ -37,9 +41,13 @@ public abstract class EstoqueService implements IEstoque{
             }
             
          try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))) {
+                writer.write("Id do lote do produto: " + idlote);
+                writer.newLine();
                 writer.write("Nome do produto: " + nome);
                 writer.newLine();
-                writer.write("Descricao do Produto: " +descricao);
+                writer.write("Nome do produto: " + nome);
+                writer.newLine();
+                writer.write("Descricao do Produto : " +descricao);
                 writer.newLine();
                 writer.write("Preco do produto: " + preco);
                 writer.newLine();
@@ -54,8 +62,11 @@ public abstract class EstoqueService implements IEstoque{
     }
 
 
-    public void ControleProduto(String nome, String descricao, String preco, double quantidade) throws EstoqueException{
-        //altera arquivo de texto selecionado
+    public Boolean ControleProduto(int idlote,int response) throws EstoqueException{
+        //altera arquivo de texto selecionado, altera quantos tem disponível, de determinado lote.
+       if(response == 1) return true;
+       if(response == 2) return false;
+
     }
 
 

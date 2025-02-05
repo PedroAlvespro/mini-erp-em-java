@@ -33,6 +33,9 @@ public class EstoqueController extends EstoqueService {
     public void ImplementacaoEstoque() {
 
         Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("digite o preco do produto");
+        int idlote = scanner.nextInt();
 
         System.out.println("digite o nome do produto");
         String nome = scanner.nextLine();
@@ -41,13 +44,13 @@ public class EstoqueController extends EstoqueService {
         String descricao = scanner.nextLine();
 
         System.out.println("digite o preco do produto");
-        String preco = scanner.nextLine();
+        float preco = scanner.nextFloat();
 
         System.out.println("digite a quantidade do produto");
         double quantidade = scanner.nextDouble();
 
         try{
-            CadastramentoProduto(nome, descricao, preco, quantidade);
+            CadastramentoProduto(idlote,nome, descricao, preco, quantidade);
         } catch (EstoqueException e){
             System.err.println("Erro: " + e.getMessage());
         }
