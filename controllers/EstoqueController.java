@@ -31,6 +31,7 @@ public class EstoqueController extends EstoqueService {
                 /*Autenticacao Usuario*/
 
                 if(login.validarUsuario(nickname,senha) == true) {
+                    System.out.println("Olá " +nickname);
                     break;
                     //para e continua para o restante do método.
                 } else {
@@ -85,6 +86,7 @@ public class EstoqueController extends EstoqueService {
         
         System.out.println("digite o numero do lote do produto");
         int idlote = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.println("digite o nome do produto");
         String nome = scanner.nextLine();
@@ -110,28 +112,30 @@ public class EstoqueController extends EstoqueService {
 
     public void ImplementacaoControle() throws UsuarioException {
         Scanner scaner = new Scanner(System.in);
-
+    
         // Solicita o número do lote
         System.out.println("Digite o número do lote do produto:");
         int idlote = scaner.nextInt();
+        scaner.nextLine();
     
         // Solicita a resposta (1 ou 2)
         System.out.println("Digite a resposta (1 para aprovar, 2 para rejeitar):");
         int response = scaner.nextInt();
     
         try {
-            // Chama o método ControleProduto, passando o idlote e a resposta
-            boolean resultado = ControleProduto(idlote, response);
-            if (resultado) {
+            boolean resultado = ControleProduto(idlote, response); // Chama o método APENAS UMA VEZ
+            
+            if (response == 1 && resultado) {
                 System.out.println("Produto aprovado com sucesso!");
-            } else {
-                System.out.println("Produto rejeitado com sucesso!");
+            } else if (response == 2 && resultado) {
+                System.out.println();
             }
+    
         } catch (EstoqueException e) {
-            // Caso ocorra algum erro no controle do produto
             System.err.println("Erro: " + e.getMessage());
         }
     }
+    
     
    
 
