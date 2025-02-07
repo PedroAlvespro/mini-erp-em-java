@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import exceptions.EstoqueException;
@@ -39,20 +40,29 @@ public void MenuVendas() throws VendasException, EstoqueException{
             return;
         } 
 
-        /*Compra */
+            /*Compra */
+            try {
         System.out.println("Digite o Id do produto");
         int id = mee.nextInt();
+        mee.nextLine();
 
         System.out.println("Digite quantos você quer comprar");
         double quantidade = mee.nextDouble();
+        mee.nextLine();
 
-        System.out.println("Digite o valor do produto");
+        System.out.println("Digite o valor do produto, lembrando que o valor do produto é multiplicado pela quantidade de produtos que você comprar!!");
         float preco = mee.nextFloat();
+        mee.nextLine();
 
-        
-       int idVenda = EstoqueService.Venda(id, quantidade, preco); //pegando id da venda
+        int idVenda = EstoqueService.Venda(id, quantidade, preco); //pegando id da venda
+        System.out.println("Venda realizada com sucesso! ID da venda: " + idVenda);
+    } catch (InputMismatchException e) {
+        System.err.println("Erro na entrada de dados. Por favor, digite os valores corretamente.");
+        mee.nextLine();  // Limpar o buffer para nova entrada
+    } catch (EstoqueException e) {
+        System.err.println("Erro ao processar a venda: " + e.getMessage());
+    }
 
-       
 
 
         

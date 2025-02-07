@@ -188,7 +188,7 @@ public abstract class EstoqueService implements IEstoque{
     }
 
       // Método para realizar uma venda
-    public static int Venda(int idLote, double quantidadeComprada, float valorPago) throws EstoqueException {
+    public static int Venda(int idlote, double quantidadeComprada, float valorPago) throws EstoqueException {
         // Caminho correto da pasta onde os arquivos dos produtos estão armazenados
         String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
         File pasta = new File(pastaPath);
@@ -199,12 +199,12 @@ public abstract class EstoqueService implements IEstoque{
         }
 
         // Define o nome do arquivo que deve ser procurado
-        String nomeArquivo = "produto_" + idLote + ".txt";
+        String nomeArquivo ="produto_"+idlote+".txt";
         File arquivo = new File(pasta, nomeArquivo);
 
         // Verifica se o arquivo existe
         if (!arquivo.exists()) {
-            throw new EstoqueException("Produto com ID de lote " + idLote + " não encontrado.");
+            throw new EstoqueException("Produto com ID de lote " + idlote + " não encontrado.");
         }
 
         // Lê o conteúdo do arquivo e extrai a quantidade e preço
@@ -241,7 +241,7 @@ public abstract class EstoqueService implements IEstoque{
         int idVenda = UUID.randomUUID().hashCode();
 
         // Atualiza o estoque após a venda
-        atualizarEstoque(idLote, quantidadeDisponivel - quantidadeComprada);
+        atualizarEstoque(idlote, quantidadeDisponivel - quantidadeComprada);
 
         // Cria o arquivo de venda
         String pastaVendasPath = System.getProperty("user.dir") + File.separator + "vendas";
@@ -254,7 +254,7 @@ public abstract class EstoqueService implements IEstoque{
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoVenda))) {
             writer.write("ID da Venda: " + idVenda);
             writer.newLine();
-            writer.write("ID do Lote: " + idLote);
+            writer.write("ID do Lote: " + idlote);
             writer.newLine();
             writer.write("Quantidade Vendida: " + quantidadeComprada);
             writer.newLine();
@@ -268,7 +268,7 @@ public abstract class EstoqueService implements IEstoque{
         return idVenda;
     }
             
-            public static void atualizarEstoque(int idLote, double novaQuantidade) throws EstoqueException {
+            public static void atualizarEstoque(int idlote, double novaQuantidade) throws EstoqueException {
                 // Caminho correto da pasta onde os arquivos dos produtos estão armazenados
                 String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
                 File pasta = new File(pastaPath);
@@ -279,12 +279,12 @@ public abstract class EstoqueService implements IEstoque{
                 }
         
                 // Define o nome do arquivo que deve ser procurado
-                String nomeArquivo = "produto_" + idLote + ".txt";
+                String nomeArquivo = "produto_"+idlote+".txt";
                 File arquivo = new File(pasta, nomeArquivo);
         
                 // Verifica se o arquivo existe
                 if (!arquivo.exists()) {
-                    throw new EstoqueException("Produto com ID de lote " + idLote + " não encontrado.");
+                    throw new EstoqueException("Produto com ID de lote " + idlote + " não encontrado.");
                 }
         
                 // Lê o conteúdo do arquivo e atualiza a quantidade
@@ -309,7 +309,7 @@ public abstract class EstoqueService implements IEstoque{
                     throw new EstoqueException("Erro ao atualizar o estoque no arquivo: " + e.getMessage());
                 }
         
-                System.out.println("Estoque atualizado com sucesso para o ID de lote " + idLote);
+                System.out.println("Estoque atualizado com sucesso para o ID de lote " + idlote);
             }
     }
 

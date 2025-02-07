@@ -1,0 +1,6 @@
+Id do lote do produto: 2
+Nome do produto: Arroz
+Nome do produto: Arroz
+Descricao do Produto : comida
+Preco do produto: 12.51
+quantidade disponivel do produto: 4.0
