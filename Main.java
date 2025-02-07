@@ -3,7 +3,10 @@ import java.util.Scanner;
 
 import controllers.EstoqueController;
 import controllers.UsuarioController;
+import controllers.VendaController;
+import exceptions.EstoqueException;
 import exceptions.UsuarioException;
+import exceptions.VendasException;
 
 public class Main {
     public static void main(String[] args) {
@@ -26,6 +29,13 @@ public class Main {
                 e.printStackTrace();
             }
 
+        } else if(response == 2){
+            VendaController vendaController = new VendaController();
+            try {
+                vendaController.MenuVendas();
+            } catch (VendasException | EstoqueException e) {
+                e.printStackTrace();
+            }
         } else if (response == 3){
               UsuarioController usuarioController = new UsuarioController();
               usuarioController.menuUsuario();

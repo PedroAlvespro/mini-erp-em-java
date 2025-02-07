@@ -31,8 +31,11 @@ public abstract class UsuarioService implements IUsuario {
             writer.newLine();
             writer.write("Senha: " + senha);
             writer.newLine();
-            writer.write("Tipo de usuário: " + (tipoUsuario == 1 ? "Gerente" : "Funcionário"));
+            writer.write("Tipo de usuário: " + 
+            (tipoUsuario == 1 ? "Gerente" : tipoUsuario == 2 ? "Funcionário" : "Cliente"));
+            
             System.out.println("Usuário cadastrado com sucesso!");
+            
         } catch (IOException e) {
             throw new UsuarioException("Erro ao salvar usuário.");
         }
@@ -66,4 +69,6 @@ public abstract class UsuarioService implements IUsuario {
         File arquivoUsuario = new File(pastaUsuarios, nickname + ".txt");
         return arquivoUsuario.exists();
     }
+
+    
 }

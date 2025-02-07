@@ -43,14 +43,15 @@ public class UsuarioController extends UsuarioService {
         System.out.println("Selecione o tipo de usuário:");
         System.out.println("1 - Gerente");
         System.out.println("2 - Funcionário");
+        System.out.println("3 - Cliente");
         tipoUsuario = scanner.nextInt();
         scanner.nextLine();  
 
-        if (tipoUsuario != 1 && tipoUsuario != 2) {
+        if (tipoUsuario != 1 && tipoUsuario != 2 && tipoUsuario != 3) {
             System.out.println("Opção inválida. Tente novamente.");
             return;
         }
-        }while(tipoUsuario != 1 && tipoUsuario != 2);
+        }while(tipoUsuario != 1 && tipoUsuario != 2 && tipoUsuario != 3);
 
         System.out.println("Digite o nickname:");
         String nickname = scanner.nextLine();
@@ -92,4 +93,8 @@ public class UsuarioController extends UsuarioService {
             System.err.println("Erro: " + e.getMessage());
         }
     }
+
+   
+
+
 }

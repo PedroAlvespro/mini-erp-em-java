@@ -3,4 +3,4 @@ Nome do produto: Feij�o
 Nome do produto: Feij�o
 Descricao do Produto : comida
 Preco do produto: 10.5
-quantidade disponivel do produto: 45.0
+quantidade disponivel do produto: 4.0

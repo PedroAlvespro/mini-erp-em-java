@@ -112,25 +112,27 @@ public class EstoqueController extends EstoqueService {
 
     public void ImplementacaoControle() throws UsuarioException {
         Scanner scaner = new Scanner(System.in);
-    
-        // Solicita o número do lote
+  
         System.out.println("Digite o número do lote do produto:");
         int idlote = scaner.nextInt();
         scaner.nextLine();
-    
-        // Solicita a resposta (1 ou 2)
+
+        System.out.println("Digite o número do ID da venda do produto:");
+        int idvenda = scaner.nextInt();
+        scaner.nextLine();
+
         System.out.println("Digite a resposta (1 para aprovar, 2 para rejeitar):");
         int response = scaner.nextInt();
-    
+
         try {
-            boolean resultado = ControleProduto(idlote, response); // Chama o método APENAS UMA VEZ
-            
+            /*Id de venda para que o funcionário aprove*/
+            boolean resultado = ControleProduto(idlote, idvenda, response);
+
             if (response == 1 && resultado) {
                 System.out.println("Produto aprovado com sucesso!");
             } else if (response == 2 && resultado) {
-                System.out.println();
+                System.out.println("Produto rejeitado com sucesso!");
             }
-    
         } catch (EstoqueException e) {
             System.err.println("Erro: " + e.getMessage());
         }
