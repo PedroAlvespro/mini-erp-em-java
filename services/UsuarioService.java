@@ -8,9 +8,15 @@ public abstract class UsuarioService implements IUsuario {
 
     private final String pastaUsuarios = System.getProperty("user.dir") + File.separator + "usuarios";
     
-    public void cadastrarUsuario(String nickname, String senha, int tipoUsuario) throws UsuarioException {
+    public void cadastrarUsuario(String nickname, String endereco, String contato, String senha, int tipoUsuario) throws UsuarioException {
         if (nickname == null || nickname.trim().isEmpty()) {
             throw new UsuarioException("Nickname inválido.");
+        }
+        if (endereco == null || endereco.trim().isEmpty()) {
+            throw new UsuarioException("endereco inválido.");
+        }
+        if (contato == null || contato.trim().isEmpty()) {
+            throw new UsuarioException("contato inválido.");
         }
         if (senha == null || senha.trim().isEmpty()) {
             throw new UsuarioException("Senha inválida.");
@@ -28,6 +34,10 @@ public abstract class UsuarioService implements IUsuario {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoUsuario))) {
             writer.write("Nickname: " + nickname);
+            writer.newLine();
+            writer.write("Endereco: " + endereco);
+            writer.newLine();
+            writer.write("Contato: " + contato);
             writer.newLine();
             writer.write("Senha: " + senha);
             writer.newLine();

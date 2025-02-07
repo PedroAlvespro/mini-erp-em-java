@@ -19,11 +19,14 @@ public void MenuVendas() throws VendasException, EstoqueException{
     Scanner me = new Scanner(System.in);
     int rep;
     do{
-        System.out.println("1- Comprar, 0- sair");
+        System.out.println("1- Comprar(Apenas para Clientes), 2- Analisar Relatórios (Apenas para Gerente),0- sair");
         rep = me.nextInt();
         if(rep == 1){
         ImplementacaoCompra();
         }
+        // if(rep == 2){
+        //     ImplementacaoRelatorio();
+        //     }
     } while(rep !=0);
 }
 

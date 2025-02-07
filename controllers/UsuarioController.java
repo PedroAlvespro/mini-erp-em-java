@@ -56,6 +56,12 @@ public class UsuarioController extends UsuarioService {
         System.out.println("Digite o nickname:");
         String nickname = scanner.nextLine();
 
+        System.out.println("Digite o seu endereco:");
+        String endereco = scanner.nextLine();
+
+        System.out.println("Digite o contato:");
+        String contato = scanner.nextLine();
+
         try {
             if (verificarExistenciaUsuario(nickname)) {
                 System.out.println("O nickname já existe no sistema. Tente outro.");
@@ -70,7 +76,7 @@ public class UsuarioController extends UsuarioService {
                 throw new UsuarioException("A senha deve ter no mínimo 8 caracteres.");
             }
 
-            cadastrarUsuario(nickname, senha, tipoUsuario);
+            cadastrarUsuario(nickname, endereco, contato, senha, tipoUsuario);
         } catch (UsuarioException e) {
             System.err.println("Erro: " + e.getMessage());
         }

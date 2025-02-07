@@ -117,4 +117,6 @@ public int Venda(int idLote, double quantidadeComprada, float valorPago) throws 
     }
 
     
+
+    
 }
