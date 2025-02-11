@@ -58,7 +58,7 @@ public class EstoqueController extends EstoqueService {
         int response;
 
         do {      
-            System.out.println("1- cadastrar produt, 2- validar produto, 0- sair");
+            System.out.println("1- cadastrar produto e depois valida-lo, 2- validar produto, 3- alertas de estoque, 0- sair");
             response = sc.nextInt();
             sc.nextLine();
 
@@ -67,6 +67,9 @@ public class EstoqueController extends EstoqueService {
                 ImplementacaoEstoque();
 
             } else if(response == 2){
+                ImplementacaoControle();
+            }
+            else if(response == 3){
                 ImplementacaoControle();
             }
             
@@ -80,7 +83,7 @@ public class EstoqueController extends EstoqueService {
     } while (response !=0);
     }
 
-    public void ImplementacaoEstoque() {
+    public void ImplementacaoEstoque() throws UsuarioException {
 
         Scanner scanner = new Scanner(System.in);
         
@@ -105,6 +108,9 @@ public class EstoqueController extends EstoqueService {
         } catch (EstoqueException e){
             System.err.println("Erro: " + e.getMessage());
         }
+
+        ImplementacaoControle();
+
         
     }
 
@@ -137,6 +143,12 @@ public class EstoqueController extends EstoqueService {
             System.err.println("Erro: " + e.getMessage());
         }
     }
+
+    public void ImplementacaoAlerta(){
+    verificarEstoqueBaixo();
+    }
+
+   
     
     
    

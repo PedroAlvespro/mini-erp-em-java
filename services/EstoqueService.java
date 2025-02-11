@@ -128,65 +128,43 @@ public abstract class EstoqueService implements IEstoque{
         System.out.println("Produto aprovado com sucesso!");
         return true;
     }
-   
-    public void AlertaEstoque(int idlote) throws EstoqueException {
-        // Caminho da pasta onde os arquivos dos produtos estão armazenados
+
+    public void verificarEstoqueBaixo() {
         String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
         File pasta = new File(pastaPath);
-    
+
         if (!pasta.exists() || !pasta.isDirectory()) {
-            throw new EstoqueException("Pasta de produtos não encontrada.");
+            System.err.println("Pasta de produtos não encontrada.");
+            return;
         }
-    
-        // Define o nome exato do arquivo do produto
-        String nomeArquivo = "produto_" + idlote + ".txt";
-        File arquivo = new File(pasta, nomeArquivo);
-    
-        if (!arquivo.exists()) {
-            throw new EstoqueException("Produto com ID de lote " + idlote + " não encontrado.");
+
+        File[] arquivos = pasta.listFiles((dir, name) -> name.startsWith("produto_") && name.endsWith(".txt"));
+        if (arquivos == null || arquivos.length == 0) {
+            System.out.println("Nenhum produto encontrado.");
+            return;
         }
-    
-        // Lê o conteúdo do arquivo para verificar a quantidade disponível
-        double quantidade = -1;
-        try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            String linha;
-            while ((linha = reader.readLine()) != null) {
-                if (linha.contains("quantidade disponivel do produto")) {
-                    String quantidadeStr = linha.split(":")[1].trim();
-                    quantidade = Double.parseDouble(quantidadeStr);
-                    break;
+
+        System.out.println("Produtos com estoque baixo:");
+        for (File arquivo : arquivos) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
+                String linha;
+                double quantidade = -1;
+                while ((linha = reader.readLine()) != null) {
+                    if (linha.contains("quantidade disponivel do produto")) {
+                        String quantidadeStr = linha.split(":")[1].trim();
+                        quantidade = Double.parseDouble(quantidadeStr);
+                        break;
+                    }
                 }
-            }
-        } catch (IOException e) {
-            throw new EstoqueException("Erro ao ler o arquivo do produto: " + e.getMessage());
-        }
-    
-        if (quantidade == -1) {
-            throw new EstoqueException("Quantidade do produto não encontrada no arquivo.");
-        }
-    
-        // Se a quantidade for menor que 5, cria um alerta na pasta "arquivosAlerta"
-        if (quantidade < 5) {
-            String alertaPastaPath = System.getProperty("user.dir") + File.separator + "arquivosAlerta";
-            File alertaPasta = new File(alertaPastaPath);
-    
-            if (!alertaPasta.exists()) {
-                alertaPasta.mkdirs(); // Cria a pasta se não existir
-            }
-    
-            File alertaArquivo = new File(alertaPasta, "alerta_" + idlote + ".txt");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(alertaArquivo))) {
-                writer.write("ALERTA: Produto com ID de lote " + idlote + " está com baixo estoque.");
-                writer.newLine();
-                writer.write("Quantidade disponível: " + quantidade);
-                writer.newLine();
-                System.out.println("Arquivo de alerta criado com sucesso: " + alertaArquivo.getAbsolutePath());
+                if (quantidade != -1 && quantidade < 5) {
+                    System.out.println(arquivo.getName() + " - Quantidade: " + quantidade);
+                }
             } catch (IOException e) {
-                throw new EstoqueException("Erro ao criar o arquivo de alerta: " + e.getMessage());
+                System.err.println("Erro ao ler o arquivo " + arquivo.getName() + ": " + e.getMessage());
             }
         }
     }
-
+   
       // Método para realizar uma venda
     public static int Venda(int idlote, double quantidadeComprada, float valorPago) throws EstoqueException {
         // Caminho correto da pasta onde os arquivos dos produtos estão armazenados
