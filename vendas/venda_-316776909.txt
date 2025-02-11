@@ -1,0 +1,4 @@
+ID da Venda: -316776909
+ID do Lote: 2
+Quantidade Vendida: 1.0
+Valor Pago: 12.51

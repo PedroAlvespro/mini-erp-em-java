@@ -1,0 +1,5 @@
+Nickname: a
+Endereco: aa
+Contato: 8465
+Senha: 87654321
+Tipo de usuário: Cliente

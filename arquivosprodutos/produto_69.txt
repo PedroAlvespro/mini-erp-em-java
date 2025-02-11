@@ -1,0 +1,14 @@
+Id do lote do produto: 69
+Nome do produto: pilhas
+Nome do produto: pilhas
+Descricao do Produto : utensilio
+Preco do produto: 4.0
+quantidade disponivel do produto: 1.0
+
+Movimentação: Saída
+Quantidade: 1.0
+Data: 2025-02-11T20:12:46.755851900
+
+Movimentação: Venda
+Quantidade: 1.0
+Data: 2025-02-11T20:12:46.778852700

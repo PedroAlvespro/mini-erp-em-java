@@ -58,7 +58,7 @@ public class EstoqueController extends EstoqueService {
         int response;
 
         do {      
-            System.out.println("1- cadastrar produto e depois valida-lo, 2- validar produto, 3- alertas de estoque, 0- sair");
+            System.out.println("1- cadastrar produto e depois valida-lo, 2- validar produto, 3- alertas de estoque, 4- relatório de movimentacao estoque 0- sair");
             response = sc.nextInt();
             sc.nextLine();
 
@@ -70,7 +70,10 @@ public class EstoqueController extends EstoqueService {
                 ImplementacaoControle();
             }
             else if(response == 3){
-                ImplementacaoControle();
+                ImplementacaoAlerta();
+            }
+            else if(response == 4){
+               ImplementacaoRelatorioMovimentacao();
             }
             
             else if (response != 0) {
@@ -146,6 +149,9 @@ public class EstoqueController extends EstoqueService {
 
     public void ImplementacaoAlerta(){
     verificarEstoqueBaixo();
+    }
+    public void ImplementacaoRelatorioMovimentacao(){
+        relatoriomovimentacao();
     }
 
    
