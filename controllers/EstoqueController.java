@@ -149,12 +149,8 @@ public class EstoqueController extends EstoqueService {
 
     verificarEstoqueBaixo();
     System.out.println();
-    System.out.println("Adicionar mais produtos ao estoque ?");
-    int responses = aevi.nextInt();
-    
-    if(responses == 1){
-        
-    }
+   
+
     }
     public void ImplementacaoRelatorioMovimentacao(){
         relatoriomovimentacao();
