@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import exceptions.EstoqueException;
+import exceptions.UsuarioException;
 import exceptions.VendasException;
 import services.EstoqueService;
 import services.VendaService;
@@ -12,7 +13,7 @@ public class VendaController extends VendaService{
 
     
 
-public void MenuVendas() throws VendasException, EstoqueException{
+public void MenuVendas() throws VendasException, EstoqueException, UsuarioException{
     //opc de autenticação
     //opc de compras
 
@@ -24,9 +25,9 @@ public void MenuVendas() throws VendasException, EstoqueException{
         if(rep == 1){
         ImplementacaoCompra();
         }
-        // if(rep == 2){
-        //     ImplementacaoRelatorio();
-        //     }
+        if(rep == 2){
+        ImplementacaoRelatorio();
+        }
     } while(rep !=0);
 }
 
@@ -65,14 +66,30 @@ public void MenuVendas() throws VendasException, EstoqueException{
     } catch (EstoqueException e) {
         System.err.println("Erro ao processar a venda: " + e.getMessage());
     }
+    }
+
+    public void ImplementacaoRelatorio() throws UsuarioException{
+        Scanner meea = new Scanner(System.in);
+
+
+        System.out.println("digite seu nickname");
+        String nome = meea.nextLine();
+
+
+        System.out.println("Digite a senha:");
+        String senha = meea.nextLine().trim();
+
+        Boolean responseLogin = validarGerente(nome,senha);
+
+        if(responseLogin != true){
+            System.out.println("Usuário nao encontrado");
+            return;
+        } 
+
+        System.out.println("Olá, gerente  " +nome);
 
 
 
-        
-        
-        
-
-        /*Comprar, selecionar o id do lote*/ 
     }
 
 }

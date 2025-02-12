@@ -145,7 +145,7 @@ public class EstoqueController extends EstoqueService {
     }
 
     public void ImplementacaoAlerta(){
-    Scanner aevi = new Scanner(System.in);
+    
 
     verificarEstoqueBaixo();
     System.out.println();

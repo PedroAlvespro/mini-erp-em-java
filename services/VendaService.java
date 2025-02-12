@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
+import exceptions.UsuarioException;
 import exceptions.VendasException;
 import interfaces.IVendaInterface;
 
@@ -23,6 +24,36 @@ public class VendaService implements IVendaInterface {
             return arquivoUsuario.exists();
         
     }
+
+    public boolean validarGerente(String nickname, String senha) throws UsuarioException {
+    File arquivoUsuario = new File(pastaUsuarios, nickname + ".txt");
+
+    if (!arquivoUsuario.exists()) {
+        return false;
+    }
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(arquivoUsuario))) {
+        String linha;
+        String senhaArmazenada = null;
+        boolean isGerente = false;
+
+        while ((linha = reader.readLine()) != null) {
+            if (linha.startsWith("Senha: ")) {
+                senhaArmazenada = linha.substring(7).trim();
+            }
+            if (linha.startsWith("Tipo de usuário: Gerente")) {
+                isGerente = true;
+            }
+        }
+
+        return isGerente && senha != null && senha.equals(senhaArmazenada);
+
+    } catch (IOException e) {
+        throw new UsuarioException("Erro ao validar gerente.");
+    }
+}
+
+
 
 
 public int Venda(int idLote, double quantidadeComprada, float valorPago) throws VendasException {

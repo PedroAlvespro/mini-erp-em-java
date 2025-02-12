@@ -32,7 +32,11 @@ public class Main {
         } else if(response == 2){
             VendaController vendaController = new VendaController();
             try {
-                vendaController.MenuVendas();
+                try {
+                    vendaController.MenuVendas();
+                } catch (UsuarioException e) {
+                    e.printStackTrace();
+                }
             } catch (VendasException | EstoqueException e) {
                 e.printStackTrace();
             }
