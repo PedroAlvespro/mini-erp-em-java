@@ -10,4 +10,5 @@ public interface IVendaInterface {
     public void atualizarEstoque(File arquivo, double novaQuantidade) throws VendasException; 
     public boolean validarGerente(String nickname, String senha) throws UsuarioException;
     public Boolean ConfirmaCliente(String nickname) throws VendasException;
+    public void relatorioDeVendas();
 }

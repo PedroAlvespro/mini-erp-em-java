@@ -1,0 +1,20 @@
+Relatório de Vendas
+====================================
+Venda ID: -1257686680
+Lote ID: 6
+Nome do Produto: Gel
+Quantidade Vendida: 1.0
+Valor Pago: R$ 12.0
+------------------------------------
+Venda ID: -817464026
+Lote ID: 1
+Nome do Produto: borracha
+Quantidade Vendida: 1.0
+Valor Pago: R$ 1.0
+------------------------------------
+Venda ID: 280355085
+Lote ID: 6
+Nome do Produto: Gel
+Quantidade Vendida: 1.0
+Valor Pago: R$ 12.0
+------------------------------------

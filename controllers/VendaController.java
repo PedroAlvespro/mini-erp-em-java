@@ -87,7 +87,8 @@ public void MenuVendas() throws VendasException, EstoqueException, UsuarioExcept
         } 
 
         System.out.println("Olá, gerente  " +nome);
-
+        /*  implementar o relatórior*/
+        relatorioDeVendas();
 
 
     }
