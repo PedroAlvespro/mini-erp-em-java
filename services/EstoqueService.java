@@ -96,38 +96,28 @@ public abstract class EstoqueService implements IEstoque{
         }
     }
 
-    public void addEstoque(int response, int idlote, int idVenda) throws EstoqueException {
-        // Caminho do arquivo de vendas
+    public void addEstoque(int idlote, int idVenda, int response) throws EstoqueException {
         String pastaVendas = System.getProperty("user.dir") + File.separator + "vendas";
         File pastaVenda = new File(pastaVendas);
-        
-        // Caminho do arquivo de produtos
+
         String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
         File pastaProduto = new File(pastaPath);
-    
-        // Verifica se a resposta é falsa
-        if (response == 2) {
-            // Localiza o arquivo de venda
+
+        if (response == 2) {  // Venda rejeitada -> devolver estoque
             File arquivoVenda = new File(pastaVenda, "venda_" + idVenda + ".txt");
-            
-            // Verifica se o arquivo de venda existe
+
             if (!arquivoVenda.exists()) {
                 throw new EstoqueException("Arquivo de venda com ID " + idVenda + " não encontrado.");
             }
-    
+
             double quantidadeVendida = 0;
             boolean encontrouQuantidade = false;
-    
-            // Lê o conteúdo do arquivo de venda
+
             try (BufferedReader reader = new BufferedReader(new FileReader(arquivoVenda))) {
                 String linha;
                 while ((linha = reader.readLine()) != null) {
-                    // Exibe o conteúdo da linha para depuração
-                    System.out.println("Linha lida do arquivo de venda: " + linha);
-    
-                    // Verifica se a linha contém a quantidade vendida
                     if (linha.contains("Quantidade Vendida: ")) {
-                        String quantidadeStr = linha.split(": ")[1].trim(); // Remover espaços extras
+                        String quantidadeStr = linha.split(": ")[1].trim();
                         try {
                             quantidadeVendida = Double.parseDouble(quantidadeStr);
                             encontrouQuantidade = true;
@@ -139,34 +129,25 @@ public abstract class EstoqueService implements IEstoque{
             } catch (IOException e) {
                 throw new EstoqueException("Erro ao ler o arquivo de venda: " + e.getMessage());
             }
-    
+
             if (!encontrouQuantidade) {
                 throw new EstoqueException("Quantidade vendida não encontrada no arquivo de venda.");
             }
-    
-            // Localiza o arquivo do produto correspondente ao ID do lote
-            String nomeArquivo = "produto_" + idlote + ".txt";
-            File arquivoProduto = new File(pastaProduto, nomeArquivo);
-    
-            // Verifica se o arquivo do produto existe
+
+            File arquivoProduto = new File(pastaProduto, "produto_" + idlote + ".txt");
+
             if (!arquivoProduto.exists()) {
                 throw new EstoqueException("Produto com ID de lote " + idlote + " não encontrado.");
             }
-    
-            // Atualiza o estoque devolvendo a quantidade vendida
-            StringBuilder conteudoAtualizado = new StringBuilder();
+
             double quantidadeAtual = 0;
             boolean encontrouQuantidadeProduto = false;
-    
-            // Lê o conteúdo do arquivo do produto
+            StringBuilder conteudoAtualizado = new StringBuilder();
+
             try (BufferedReader readerProduto = new BufferedReader(new FileReader(arquivoProduto))) {
                 String linha;
                 while ((linha = readerProduto.readLine()) != null) {
-                    // Exibe o conteúdo da linha para depuração
-                    System.out.println("Linha lida do arquivo de produto: " + linha);
-    
-                    // Verifica se a linha contém a quantidade disponível
-                    if (linha.contains("quantidade disponivel do produto: ")) {
+                    if (linha.startsWith("quantidade disponivel do produto: ")) {
                         String quantidadeStr = linha.split(": ")[1].trim();
                         try {
                             quantidadeAtual = Double.parseDouble(quantidadeStr);
@@ -174,33 +155,27 @@ public abstract class EstoqueService implements IEstoque{
                         } catch (NumberFormatException e) {
                             throw new EstoqueException("Erro ao converter quantidade do produto: " + e.getMessage());
                         }
-                    }
-    
-                    // Atualiza a linha da quantidade disponível, devolvendo a quantidade vendida
-                    if (encontrouQuantidadeProduto) {
                         linha = "quantidade disponivel do produto: " + (quantidadeAtual + quantidadeVendida);
                     }
-    
                     conteudoAtualizado.append(linha).append(System.lineSeparator());
                 }
             } catch (IOException e) {
                 throw new EstoqueException("Erro ao ler o arquivo do produto: " + e.getMessage());
             }
-    
+
             if (!encontrouQuantidadeProduto) {
                 throw new EstoqueException("Quantidade do produto não encontrada no arquivo.");
             }
-    
-            // Escreve o conteúdo atualizado de volta ao arquivo do produto
+
             try (BufferedWriter writerProduto = new BufferedWriter(new FileWriter(arquivoProduto))) {
                 writerProduto.write(conteudoAtualizado.toString());
-                System.out.println("Quantidade devolvida ao estoque com sucesso.");
+                System.out.println("Quantidade devolvida ao estoque com sucesso. Nova quantidade: " + (quantidadeAtual + quantidadeVendida));
             } catch (IOException e) {
                 throw new EstoqueException("Erro ao atualizar o arquivo do produto: " + e.getMessage());
             }
         }
     }
-    
+
 
 
     public void verificarEstoqueBaixo() {

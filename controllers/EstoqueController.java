@@ -128,7 +128,7 @@ public class EstoqueController extends EstoqueService {
         int idvenda = scaner.nextInt();
         scaner.nextLine();
 
-        System.out.println("Digite a resposta (1 para aprovar, 2 para rejeitar):");
+        System.out.println("Digite a resposta (1 para aprovar, 2 para rejeitar a venda):");
         int response = scaner.nextInt();
 
         try {

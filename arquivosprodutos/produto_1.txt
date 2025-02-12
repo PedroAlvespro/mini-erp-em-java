@@ -1,0 +1,6 @@
+Id do lote do produto: 1
+Nome do produto: borracha
+Descricao do Produto : utensilio
+Preco do produto: 1.0
+quantidade inicial do produto: 4.0
+quantidade disponivel do produto: 4.0
