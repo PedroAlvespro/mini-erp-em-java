@@ -1,4 +1,0 @@
-ID da Venda: -1083356250
-ID do Lote: 69
-Quantidade Vendida: 1.0
-Valor Pago: 4.0

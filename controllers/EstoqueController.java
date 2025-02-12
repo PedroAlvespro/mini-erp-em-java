@@ -58,7 +58,7 @@ public class EstoqueController extends EstoqueService {
         int response;
 
         do {      
-            System.out.println("1- cadastrar produto e depois valida-lo, 2- validar produto, 3- alertas de estoque, 4- relatório de movimentacao estoque 0- sair");
+            System.out.println("1- cadastrar produto, 2- validar produto, 3- alertas de estoque, 4- relatório de movimentacao estoque 0- sair");
             response = sc.nextInt();
             sc.nextLine();
 
@@ -112,8 +112,6 @@ public class EstoqueController extends EstoqueService {
             System.err.println("Erro: " + e.getMessage());
         }
 
-        ImplementacaoControle();
-
         
     }
 
@@ -134,13 +132,12 @@ public class EstoqueController extends EstoqueService {
         int response = scaner.nextInt();
 
         try {
-            /*Id de venda para que o funcionário aprove*/
-            boolean resultado = ControleProduto(idlote, idvenda, response);
-
-            if (response == 1 && resultado) {
+            
+            if (response == 1) {
                 System.out.println("Produto aprovado com sucesso!");
-            } else if (response == 2 && resultado) {
+            } else if (response == 2) {
                 System.out.println("Produto rejeitado com sucesso!");
+                 addEstoque( idlote, idvenda, response);
             }
         } catch (EstoqueException e) {
             System.err.println("Erro: " + e.getMessage());
@@ -154,7 +151,7 @@ public class EstoqueController extends EstoqueService {
         relatoriomovimentacao();
     }
 
-   
+      
     
     
    

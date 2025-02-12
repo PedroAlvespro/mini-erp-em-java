@@ -6,8 +6,7 @@ import exceptions.EstoqueException;
 public interface IEstoque
     {
         public void CadastramentoProduto(int idlote,String nome, String descricao, float preco, double quantidade) throws EstoqueException;
-        public Boolean ControleProduto(int idlote,int idvenda,int response) throws EstoqueException;
         public void verificarEstoqueBaixo();
         public void relatoriomovimentacao();
-        
+        public void addEstoque(int response,int idlote, int idVenda) throws EstoqueException;
     }
