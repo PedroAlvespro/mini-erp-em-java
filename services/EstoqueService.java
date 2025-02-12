@@ -96,6 +96,10 @@ public abstract class EstoqueService implements IEstoque{
         }
     }
 
+    public void reposicaoEstoque(int idlote, double novaQuantidade){
+        
+    }
+
     public void addEstoque(int idlote, int idVenda, int response) throws EstoqueException {
         String pastaVendas = System.getProperty("user.dir") + File.separator + "vendas";
         File pastaVenda = new File(pastaVendas);
