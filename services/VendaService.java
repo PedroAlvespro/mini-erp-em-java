@@ -14,10 +14,7 @@ import interfaces.IVendaInterface;
 
 public class VendaService implements IVendaInterface {
     
-    
     private final String pastaUsuarios = System.getProperty("user.dir") + File.separator + "usuarios";
-
-
 
     public Boolean ConfirmaCliente(String nickname) throws VendasException {
             File arquivoUsuario = new File(pastaUsuarios, nickname + ".txt");
@@ -52,9 +49,6 @@ public class VendaService implements IVendaInterface {
         throw new UsuarioException("Erro ao validar gerente.");
     }
 }
-
-
-
 
     public int Venda(int idLote, double quantidadeComprada, float valorPago) throws VendasException {
         
@@ -147,10 +141,7 @@ public class VendaService implements IVendaInterface {
         }
     }
 
-    
-
-    
-public void relatorioDeVendas() {
+    public void relatorioDeVendas() {
     String pastaVendasPath = System.getProperty("user.dir") + File.separator + "vendas";
     File pastaVendas = new File(pastaVendasPath);
 
@@ -196,6 +187,41 @@ public void relatorioDeVendas() {
 
     System.out.println(conteudoRelatorio.toString());
 }
+
+    public void exibeProdutos() {
+        String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
+        File pasta = new File(pastaPath);
+
+        if (!pasta.exists() || !pasta.isDirectory()) {
+            System.out.println("Nenhum produto encontrado. Pasta não existe.");
+            return;
+         }
+
+         File[] arquivosProdutos = pasta.listFiles();
+        if (arquivosProdutos == null || arquivosProdutos.length == 0) {
+         System.out.println("Nenhum produto disponível.");
+         return;
+    }
+
+        System.out.println("Lista de Produtos Disponíveis:");
+        System.out.println("====================================");
+        
+        for (File arquivo : arquivosProdutos) {
+            if (arquivo.isFile() && arquivo.getName().startsWith("produto_")) {
+                String idLote = arquivo.getName().replace("produto_", "").replace(".txt", "");
+                try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
+                    String nomeProduto = reader.readLine();
+                    if (nomeProduto != null && !nomeProduto.trim().isEmpty()) {
+                        System.out.println("ID: " + idLote + " - Produto: " + nomeProduto);
+                    } else {
+                        System.out.println("ID: " + idLote + " - Produto sem nome disponível.");
+                    }
+                } catch (IOException e) {
+                    System.err.println("Erro ao ler o arquivo: " + arquivo.getName());
+                }
+            }
+        }
+    }
 
     
 }

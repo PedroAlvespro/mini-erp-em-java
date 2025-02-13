@@ -1,0 +1,6 @@
+Id do lote do produto: 43
+Nome do produto: Clips
+Descricao do Produto : Utensilio, prende papel
+Preco do produto: 1.0
+quantidade inicial do produto: 7.0
+quantidade disponivel do produto: 7.0

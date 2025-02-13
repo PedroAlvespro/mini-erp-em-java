@@ -11,4 +11,5 @@ public interface IVendaInterface {
     public boolean validarGerente(String nickname, String senha) throws UsuarioException;
     public Boolean ConfirmaCliente(String nickname) throws VendasException;
     public void relatorioDeVendas();
+    public void exibeProdutos();
 }

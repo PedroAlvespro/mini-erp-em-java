@@ -15,7 +15,6 @@ import interfaces.IEstoque;
 
 public abstract class EstoqueService implements IEstoque{
 
-    
     public void CadastramentoProduto(int idlote, String nome, String descricao, float preco, double quantidade) throws EstoqueException {
         if (idlote < 0) throw new EstoqueException("id de lote menor do que 0");
         if (nome == null || nome.trim().isEmpty()) throw new EstoqueException("Nome do produto inválido.");

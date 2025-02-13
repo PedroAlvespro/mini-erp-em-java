@@ -59,6 +59,10 @@ public class VendaController extends VendaService{
 
         try {
 
+        System.out.println();
+        exibeProdutos();
+        System.out.println();
+
         System.out.println("Digite o Id do produto");
         int id = mee.nextInt();
         mee.nextLine();
