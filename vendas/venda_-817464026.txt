@@ -1,4 +1,0 @@
-ID da Venda: -817464026
-ID do Lote: 1
-Quantidade Vendida: 1.0
-Valor Pago: 1.0

@@ -56,7 +56,7 @@ public class VendaService implements IVendaInterface {
 
 
 
-public int Venda(int idLote, double quantidadeComprada, float valorPago) throws VendasException {
+    public int Venda(int idLote, double quantidadeComprada, float valorPago) throws VendasException {
         
         String pastaProdutos = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
         String pastaVendas = System.getProperty("user.dir") + File.separator + "vendas";
@@ -149,98 +149,52 @@ public int Venda(int idLote, double quantidadeComprada, float valorPago) throws 
 
     
 
-    public void relatorioDeVendas() {
-        String pastaVendasPath = System.getProperty("user.dir") + File.separator + "vendas";
-        File pastaVendas = new File(pastaVendasPath);
     
-        String pastaProdutosPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
-        File pastaProdutos = new File(pastaProdutosPath);
-    
-        String pastaRelatoriosPath = System.getProperty("user.dir") + File.separator + "relatorios_vendas";
-        File pastaRelatorios = new File(pastaRelatoriosPath);
-    
-        if (!pastaRelatorios.exists()) {
-            pastaRelatorios.mkdirs();
-        }
-    
-        File[] arquivosVendas = pastaVendas.listFiles();
-        if (arquivosVendas == null || arquivosVendas.length == 0) {
-            System.out.println("Nenhuma venda registrada.");
-            return;
-        }
-    
-        File arquivoRelatorio = new File(pastaRelatorios, "relatorio_vendas.txt");
-    
-        StringBuilder conteudoRelatorio = new StringBuilder();
-        conteudoRelatorio.append("Relatório de Vendas\n");
-        conteudoRelatorio.append("====================================\n");
-    
-        for (File arquivoVenda : arquivosVendas) {
-            if (arquivoVenda.isFile() && arquivoVenda.getName().startsWith("venda_") && arquivoVenda.getName().endsWith(".txt")) {
-                int idLote = -1;
-                int idVenda = -1;
-                double quantidadeVendida = 0;
-                float valorPago = 0;
-                String nomeProduto = "Desconhecido";
-    
-                try (BufferedReader readerVenda = new BufferedReader(new FileReader(arquivoVenda))) {
-                    String linha;
-                    while ((linha = readerVenda.readLine()) != null) {
-                        if (linha.startsWith("ID da Venda: ")) {
-                            idVenda = Integer.parseInt(linha.split(": ")[1].trim());
-                        }
-                        if (linha.startsWith("ID do Lote: ")) {
-                            idLote = Integer.parseInt(linha.split(": ")[1].trim());
-                        }
-                        if (linha.startsWith("Quantidade Vendida: ")) {
-                            quantidadeVendida = Double.parseDouble(linha.split(": ")[1].trim());
-                        }
-                        if (linha.startsWith("Valor Pago: ")) {
-                            valorPago = Float.parseFloat(linha.split(": ")[1].trim());
-                        }
-                    }
-                } catch (IOException e) {
-                    System.err.println("Erro ao ler o arquivo de venda: " + arquivoVenda.getName());
-                    continue;
+public void relatorioDeVendas() {
+    String pastaVendasPath = System.getProperty("user.dir") + File.separator + "vendas";
+    File pastaVendas = new File(pastaVendasPath);
+
+    String pastaRelatoriosPath = System.getProperty("user.dir") + File.separator + "relatorios_vendas";
+    File pastaRelatorios = new File(pastaRelatoriosPath);
+
+    if (!pastaRelatorios.exists()) {
+        pastaRelatorios.mkdirs();
+    }
+
+    File[] arquivosVendas = pastaVendas.listFiles();
+    if (arquivosVendas == null || arquivosVendas.length == 0) {
+        System.out.println("Nenhuma venda registrada.");
+        return;
+    }
+
+    File arquivoRelatorio = new File(pastaRelatorios, "relatorio_vendas.txt");
+    StringBuilder conteudoRelatorio = new StringBuilder();
+    conteudoRelatorio.append("Relatório de Vendas\n");
+    conteudoRelatorio.append("====================================\n");
+
+    for (File arquivoVenda : arquivosVendas) {
+        if (arquivoVenda.isFile() && arquivoVenda.getName().startsWith("venda_")) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(arquivoVenda))) {
+                String linha;
+                while ((linha = reader.readLine()) != null) {
+                    conteudoRelatorio.append(linha).append("\n");
                 }
-    
-                if (idLote != -1) {
-                    File arquivoProduto = new File(pastaProdutos, "produto_" + idLote + ".txt");
-                    if (arquivoProduto.exists()) {
-                        try (BufferedReader readerProduto = new BufferedReader(new FileReader(arquivoProduto))) {
-                            String linha;
-                            while ((linha = readerProduto.readLine()) != null) {
-                                if (linha.startsWith("Nome do produto: ")) {
-                                    nomeProduto = linha.split(": ")[1].trim();
-                                    break;
-                                }
-                            }
-                        } catch (IOException e) {
-                            System.err.println("Erro ao ler arquivo do produto: " + arquivoProduto.getName());
-                        }
-                    }
-                }
-    
-                conteudoRelatorio.append("Venda ID: ").append(idVenda).append("\n");
-                conteudoRelatorio.append("Lote ID: ").append(idLote).append("\n");
-                conteudoRelatorio.append("Nome do Produto: ").append(nomeProduto).append("\n");
-                conteudoRelatorio.append("Quantidade Vendida: ").append(quantidadeVendida).append("\n");
-                conteudoRelatorio.append("Valor Pago: R$ ").append(valorPago).append("\n");
                 conteudoRelatorio.append("------------------------------------\n");
+            } catch (IOException e) {
+                System.err.println("Erro ao ler o arquivo de venda: " + arquivoVenda.getName());
             }
         }
-    
-        // Salvar o relatório no arquivo
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoRelatorio))) {
-            writer.write(conteudoRelatorio.toString());
-            System.out.println("Relatório de vendas gerado com sucesso!");
-        } catch (IOException e) {
-            System.err.println("Erro ao criar o relatório de vendas: " + e.getMessage());
-            return;
-        }
-    
-        // Exibir o relatório na tela
-        System.out.println(conteudoRelatorio.toString());
     }
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoRelatorio))) {
+        writer.write(conteudoRelatorio.toString());
+        System.out.println("Relatório de vendas gerado com sucesso!");
+    } catch (IOException e) {
+        System.err.println("Erro ao criar o relatório de vendas: " + e.getMessage());
+    }
+
+    System.out.println(conteudoRelatorio.toString());
+}
+
     
 }

@@ -128,14 +128,12 @@ public class EstoqueController extends EstoqueService {
         int idvenda = scaner.nextInt();
         scaner.nextLine();
 
-        System.out.println("Digite a resposta (1 para aprovar, 2 para rejeitar a venda):");
+        System.out.println("Digite a resposta (2 para rejeitar a venda):");
         int response = scaner.nextInt();
 
         try {
             
-            if (response == 1) {
-                System.out.println("Produto aprovado com sucesso!");
-            } else if (response == 2) {
+             if (response == 2) {
                 System.out.println("Produto rejeitado com sucesso!");
                  addEstoque( idlote, idvenda, response);
             }

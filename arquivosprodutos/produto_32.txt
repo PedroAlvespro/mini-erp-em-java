@@ -1,6 +1,0 @@
-Id do lote do produto: 32
-Nome do produto: Escova de dente
-Descricao do Produto : utensilio
-Preco do produto: 12.0
-quantidade inicial do produto: 4.0
-quantidade disponivel do produto: 4.0

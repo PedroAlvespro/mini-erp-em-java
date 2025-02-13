@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import exceptions.EstoqueException;
@@ -96,8 +97,6 @@ public abstract class EstoqueService implements IEstoque{
         }
     }
 
-    
-
     public void addEstoque(int idlote, int idVenda, int response) throws EstoqueException {
         String pastaVendas = System.getProperty("user.dir") + File.separator + "vendas";
         File pastaVenda = new File(pastaVendas);
@@ -178,8 +177,6 @@ public abstract class EstoqueService implements IEstoque{
         }
     }
 
-
-
     public void verificarEstoqueBaixo() {
         String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
         File pasta = new File(pastaPath);
@@ -223,61 +220,57 @@ public abstract class EstoqueService implements IEstoque{
         }
     }
    
-     
-        // Método para realizar uma venda, retorna um idvenda quando a venda é efetuada corretamente
-      public static int Venda(int idLote, double quantidadeComprada, float valorPago) throws EstoqueException {
-        String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
-        File pasta = new File(pastaPath);
-
-        if (!pasta.exists() || !pasta.isDirectory()) {
-            throw new EstoqueException("Pasta de produtos não encontrada.");
-        }
-
-        String nomeArquivo = "produto_" + idLote + ".txt";
-        File arquivo = new File(pasta, nomeArquivo);
-
-        if (!arquivo.exists()) {
-            throw new EstoqueException("Produto com ID de lote " + idLote + " não encontrado.");
-        }
-
-        double quantidadeDisponivel = 0;
-        float preco = 0;
-        StringBuilder conteudo = new StringBuilder();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            String linha;
-            while ((linha = reader.readLine()) != null) {
-                conteudo.append(linha).append(System.lineSeparator());
-                if (linha.startsWith("Preco do produto: ")) {
-                    preco = Float.parseFloat(linha.split(": ")[1]);
-                }
-                if (linha.startsWith("quantidade disponivel do produto: ")) {
-                    quantidadeDisponivel = Double.parseDouble(linha.split(": ")[1]);
-                }
+    public static int Venda(int idLote, double quantidadeComprada, float valorPago, String nomeCliente, String enderecoCliente) throws EstoqueException {
+            String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
+            File pasta = new File(pastaPath);
+        
+            if (!pasta.exists() || !pasta.isDirectory()) {
+                throw new EstoqueException("Pasta de produtos não encontrada.");
             }
-        } catch (IOException e) {
-            throw new EstoqueException("Erro ao ler o arquivo do produto.");
+        
+            String nomeArquivo = "produto_" + idLote + ".txt";
+            File arquivo = new File(pasta, nomeArquivo);
+        
+            if (!arquivo.exists()) {
+                throw new EstoqueException("Produto com ID de lote " + idLote + " não encontrado.");
+            }
+        
+            double quantidadeDisponivel = 0;
+            float preco = 0;
+            StringBuilder conteudo = new StringBuilder();
+        
+            try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
+                String linha;
+                while ((linha = reader.readLine()) != null) {
+                    conteudo.append(linha).append(System.lineSeparator());
+                    if (linha.startsWith("Preco do produto: ")) {
+                        preco = Float.parseFloat(linha.split(": ")[1]);
+                    }
+                    if (linha.startsWith("quantidade disponivel do produto: ")) {
+                        quantidadeDisponivel = Double.parseDouble(linha.split(": ")[1]);
+                    }
+                }
+            } catch (IOException e) {
+                throw new EstoqueException("Erro ao ler o arquivo do produto.");
+            }
+        
+            if (quantidadeComprada > quantidadeDisponivel) {
+                throw new EstoqueException("Quantidade insuficiente em estoque.");
+            }
+        
+            float valorTotal = preco * (float) quantidadeComprada;
+            if (valorPago != valorTotal) {
+                throw new EstoqueException("Valor incorreto para a compra. Venda inválida.");
+            }
+        
+            int idVenda = UUID.randomUUID().hashCode();
+            atualizarEstoque(idLote, quantidadeDisponivel - quantidadeComprada);
+            registrarMovimentacaoEstoque(idLote, "Venda", quantidadeComprada);
+            registrarVenda(idVenda, idLote, quantidadeComprada, valorPago, nomeCliente, enderecoCliente);
+        
+            return idVenda;
         }
-
-        if (quantidadeComprada > quantidadeDisponivel) {
-            throw new EstoqueException("Quantidade insuficiente em estoque.");
-        }
-
-        float valorTotal = preco * (float) quantidadeComprada;
-        if (valorPago != valorTotal) {
-            throw new EstoqueException("Valor incorreto para a compra. Venda inválida.");
-        }
-
-        int idVenda = UUID.randomUUID().hashCode();
-        atualizarEstoque(idLote, quantidadeDisponivel - quantidadeComprada);
-        registrarMovimentacaoEstoque(idLote, "Venda", quantidadeComprada);
-        registrarVenda(idVenda, idLote, quantidadeComprada, valorPago);
-
-        return idVenda;
-    }
-
-
-    // Cria uma registro de Movimentaçãp
+ 
     public static void registrarMovimentacaoEstoque(int idLote, String tipoMovimentacao, double quantidade) throws EstoqueException {
         String pastaPath = System.getProperty("user.dir") + File.separator + "movimentacoes";
         File pasta = new File(pastaPath);
@@ -302,7 +295,6 @@ public abstract class EstoqueService implements IEstoque{
         }
     }
 
-    //atualiza o estoque.
     public static void atualizarEstoque(int idLote, double novaQuantidade) throws EstoqueException {
     String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
     File arquivo = new File(pastaPath, "produto_" + idLote + ".txt");
@@ -352,30 +344,40 @@ public abstract class EstoqueService implements IEstoque{
     registrarMovimentacaoEstoque(idLote, tipoMovimentacao, quantidadeMovimentada);
 }
 
-
-
-    public static void registrarVenda(int idVenda, int idLote, double quantidade, float valorPago) throws EstoqueException {
-        String pastaVendasPath = System.getProperty("user.dir") + File.separator + "vendas";
-        File pastaVendas = new File(pastaVendasPath);
-        if (!pastaVendas.exists()) {
-            pastaVendas.mkdirs();
-        }
-
-        File arquivoVenda = new File(pastaVendas, "venda_" + idVenda + ".txt");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoVenda))) {
-            writer.write("ID da Venda: " + idVenda);
-            writer.newLine();
-            writer.write("ID do Lote: " + idLote);
-            writer.newLine();
-            writer.write("Quantidade Vendida: " + quantidade);
-            writer.newLine();
-            writer.write("Valor Pago: " + valorPago);
-            writer.newLine();
-            System.out.println("Venda registrada com sucesso!");
-        } catch (IOException e) {
-            throw new EstoqueException("Erro ao registrar a venda.");
-        }
+    public static void registrarVenda(int idVenda, int idLote, double quantidade, float valorPago, String nomeCliente, String enderecoCliente) throws EstoqueException {
+    String pastaVendasPath = System.getProperty("user.dir") + File.separator + "vendas";
+    File pastaVendas = new File(pastaVendasPath);
+    if (!pastaVendas.exists()) {
+        pastaVendas.mkdirs();
     }
+
+    File arquivoVenda = new File(pastaVendas, "venda_" + idVenda + ".txt");
+    LocalDateTime dataHoraAtual = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    String dataHoraFormatada = dataHoraAtual.format(formatter);
+    
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoVenda))) {
+        writer.write("ID da Venda: " + idVenda);
+        writer.newLine();
+        writer.write("ID do Lote: " + idLote);
+        writer.newLine();
+        writer.write("Quantidade Vendida: " + quantidade);
+        writer.newLine();
+        writer.write("Valor Pago: " + valorPago);
+        writer.newLine();
+        writer.write("Nome do Cliente: " + nomeCliente);
+        writer.newLine();
+        writer.write("Endereço do Cliente: " + enderecoCliente);
+        writer.newLine();
+        writer.write("Data e Hora da Compra: " + dataHoraFormatada);
+        writer.newLine();
+        System.out.println("Venda registrada com sucesso!");
+    } catch (IOException e) {
+        throw new EstoqueException("Erro ao registrar a venda.");
+    }
+}
+
+    
 }
 
     

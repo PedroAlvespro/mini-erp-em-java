@@ -1,6 +1,0 @@
-Id do lote do produto: 12
-Nome do produto: Lapis
-Descricao do Produto : Escolar
-Preco do produto: 1.0
-quantidade inicial do produto: 40.0
-quantidade disponivel do produto: 35.0

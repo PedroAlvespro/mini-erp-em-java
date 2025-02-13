@@ -31,12 +31,16 @@ public void MenuVendas() throws VendasException, EstoqueException, UsuarioExcept
     } while(rep !=0);
 }
 
-    public void ImplementacaoCompra() throws VendasException, EstoqueException{
+    public void ImplementacaoCompra() throws VendasException, EstoqueException {
         Scanner mee = new Scanner(System.in);
 
 
         System.out.println("digite seu nickname");
         String nome = mee.nextLine();
+
+        System.out.println("digite seu endereço");
+        String endereco = mee.nextLine();
+
         Boolean responseLogin = ConfirmaCliente(nome);
 
         if(responseLogin != true){
@@ -44,8 +48,8 @@ public void MenuVendas() throws VendasException, EstoqueException, UsuarioExcept
             return;
         } 
 
-            /*Compra */
-            try {
+        try {
+
         System.out.println("Digite o Id do produto");
         int id = mee.nextInt();
         mee.nextLine();
@@ -58,7 +62,7 @@ public void MenuVendas() throws VendasException, EstoqueException, UsuarioExcept
         float preco = mee.nextFloat();
         mee.nextLine();
 
-        int idVenda = EstoqueService.Venda(id, quantidade, preco); //pegando id da venda
+        int idVenda = EstoqueService.Venda(id, quantidade, preco,nome,endereco); //pegando id da venda
         System.out.println("Venda realizada com sucesso! ID da venda: " + idVenda);
     } catch (InputMismatchException e) {
         System.err.println("Erro na entrada de dados. Por favor, digite os valores corretamente.");
@@ -66,14 +70,16 @@ public void MenuVendas() throws VendasException, EstoqueException, UsuarioExcept
     } catch (EstoqueException e) {
         System.err.println("Erro ao processar a venda: " + e.getMessage());
     }
+
     }
 
     public void ImplementacaoRelatorio() throws UsuarioException{
+
         Scanner meea = new Scanner(System.in);
 
 
         System.out.println("digite seu nickname");
-        String nome = meea.nextLine();
+        String nome = meea.nextLine().trim();
 
 
         System.out.println("Digite a senha:");

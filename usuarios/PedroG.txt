@@ -1,5 +1,0 @@
-Nickname: PedroG
-Endereco: Avenida dos Peixes, n�mero 250 , Fenda das Ostras-Oceano Atl�ntico
-Contato: 40019811
-Senha: 87654321
-Tipo de usuário: Gerente

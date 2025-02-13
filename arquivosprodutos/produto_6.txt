@@ -1,6 +1,0 @@
-Id do lote do produto: 6
-Nome do produto: Gel
-Descricao do Produto : beleza
-Preco do produto: 12.0
-quantidade inicial do produto: 7.0
-quantidade disponivel do produto: 6.0

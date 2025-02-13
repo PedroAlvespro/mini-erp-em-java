@@ -1,0 +1,5 @@
+Nickname: Douglas
+Endereco: Avenida dos Peixes, sentido Norte - Fenda do Bikini
+Contato: 38338383
+Senha: 12345678
+Tipo de usuário: Funcionário

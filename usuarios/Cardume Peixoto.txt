@@ -1,5 +1,0 @@
-Nickname: Cardume Peixoto
-Endereco: Abaixo d�gua, Ostras, Fenda do Biquini
-Contato: 40028922
-Senha: 87654321
-Tipo de usuário: Funcionário

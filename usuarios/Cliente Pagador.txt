@@ -1,0 +1,5 @@
+Nickname: Cliente Pagador
+Endereco: Boas pr�ticas, CeraPior ou PiorCera
+Contato: monte reto
+Senha: 12345678
+Tipo de usuário: Cliente
