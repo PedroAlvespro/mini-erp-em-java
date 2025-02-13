@@ -1,0 +1,18 @@
+Relatório de Vendas
+====================================
+ID da Venda: -1398135915
+ID do Lote: 1
+Quantidade Vendida: 1.0
+Valor Pago: 13.0
+Nome do Cliente: Cliente Pagador
+Endereço do Cliente: aa
+Data e Hora da Compra: 13/02/2025 14:46:50
+------------------------------------
+ID da Venda: -871760323
+ID do Lote: 1
+Quantidade Vendida: 1.0
+Valor Pago: 13.0
+Nome do Cliente: Cliente Pagador
+Endereço do Cliente: avenida dos esquilos
+Data e Hora da Compra: 13/02/2025 14:14:53
+------------------------------------

@@ -1,0 +1,5 @@
+Nickname: Kiko gerente
+Endereco: aka
+Contato: akaka11
+Senha: 87654321
+Tipo de usuário: Gerente

@@ -182,13 +182,14 @@ public void relatorioDeVendas() {
                 conteudoRelatorio.append("------------------------------------\n");
             } catch (IOException e) {
                 System.err.println("Erro ao ler o arquivo de venda: " + arquivoVenda.getName());
+                System.out.println();
             }
         }
     }
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoRelatorio))) {
         writer.write(conteudoRelatorio.toString());
-        System.out.println("Relatório de vendas gerado com sucesso!");
+        System.out.println("Relatório de vendas gerado com sucesso: ");
     } catch (IOException e) {
         System.err.println("Erro ao criar o relatório de vendas: " + e.getMessage());
     }

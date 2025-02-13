@@ -15,33 +15,36 @@ public class EstoqueController extends EstoqueService {
         int responsee;
 
         do {      
-            System.out.println("Você realmente é um Funcionário ? 1 - Sim, 2 - Para nao");
+            System.out.println("Olá, vamos confirmar sua identidade, você realmente é um Funcionário ?");
+            System.out.println("1- Para Prosseguir e Confirmar sua Identidade, 2- Para retornar ao menu inicial.");
             responsee = sce.nextInt();
             sce.nextLine();
 
             if (responsee == 1 ) {
 
                 UsuarioController login = new UsuarioController();
-                System.err.println("Digite seu nome");
+                System.err.println("Digite seu nome de Identificação de Funcionário");
                 String nickname = sce.nextLine();
 
-                System.err.println("Digite sua senha");
+                System.err.println("Digite sua senha de Identificação");
                 String senha = sce.nextLine();
-
-                /*Autenticacao Usuario*/
+                
+                System.out.println();
+                System.out.println();
 
                 if(login.validarUsuario(nickname,senha) == true) {
                     System.out.println("Olá " +nickname);
+                    System.out.println();
                     break;
-                    //para e continua para o restante do método.
+    
                 } else {
-                    System.out.println("Não encontramos nenhum funcionário com as credenciais" + nickname + "voltando para o menu...S");
+                    System.out.println("Não encontramos nenhum funcionário com as credenciais: " + nickname + ", vamos voltar para o Menu Inicial.");
                     return;
                 }
 
 
             } else if(responsee == 2){
-                System.out.println("Ok, retornando para o Menu anterior...");
+                System.out.println("Ok, retornando para o Menu Inicial");
                 return;
             }
             
@@ -58,22 +61,35 @@ public class EstoqueController extends EstoqueService {
         int response;
 
         do {      
-            System.out.println("1- cadastrar produto, 2- validar produto, 3- alertas de estoque, 4- relatório de movimentacao estoque 0- sair");
+            System.out.println("1- Para Adicionar Produto ao Estoque ");
+            System.out.println();
+            System.out.println("2- Para Processar Compra (Negar Venda para o Cliente.)");
+            System.out.println();
+            System.out.println("3- Para visualizar os Alertas de Produtos com Estoque Baixo(Caso não tenha Produtos com baixo Estoque, não notificaremos)");
+            System.out.println();
+            System.out.println("4- Para visualizar o Relatório de movimentacao estoque (Todos os Produtos que entraram e saíram do Estoque).");
+            System.out.println();
+            System.out.println("0- Para sair do Menu de Funcionário");
+            System.out.println();
             response = sc.nextInt();
             sc.nextLine();
 
             if (response == 1 ) {
 
                 ImplementacaoEstoque();
+                System.out.println();
 
             } else if(response == 2){
                 ImplementacaoControle();
+                System.out.println();
             }
             else if(response == 3){
                 ImplementacaoAlerta();
+                System.out.println();
             }
             else if(response == 4){
                ImplementacaoRelatorioMovimentacao();
+               System.out.println();
             }
             
             else if (response != 0) {
@@ -115,8 +131,6 @@ public class EstoqueController extends EstoqueService {
         
     }
 
-    //acessivel apenas para funcionário
-
     public void ImplementacaoControle() throws UsuarioException {
         Scanner scaner = new Scanner(System.in);
   
@@ -128,36 +142,35 @@ public class EstoqueController extends EstoqueService {
         int idvenda = scaner.nextInt();
         scaner.nextLine();
 
-        System.out.println("Digite a resposta (2 para rejeitar a venda):");
+        System.out.println();
+        System.out.println("Tudo Pronto, Digite 2-  para Rejeitar a venda, (Caso você digitar 2 para confirmar a  rejeição, voltaremos para o Menu Anterior :)");
         int response = scaner.nextInt();
+        System.out.println();
 
         try {
             
              if (response == 2) {
                 System.out.println("Produto rejeitado com sucesso!");
-                 addEstoque( idlote, idvenda, response);
+                /*AddEstoque, remove quantidade do estoque, processa venda */
+                addEstoque( idlote, idvenda, response);
             }
         } catch (EstoqueException e) {
             System.err.println("Erro: " + e.getMessage());
         }
+        System.out.println();
     }
 
     public void ImplementacaoAlerta(){
-    
 
     verificarEstoqueBaixo();
     System.out.println();
-   
 
     }
+    
     public void ImplementacaoRelatorioMovimentacao(){
         relatoriomovimentacao();
+        System.out.println();
     }
 
-      
-    
-    
-   
-
-    }
+}
 
