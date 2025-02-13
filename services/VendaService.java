@@ -189,39 +189,54 @@ public class VendaService implements IVendaInterface {
 }
 
     public void exibeProdutos() {
-        String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
-        File pasta = new File(pastaPath);
+    String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
+    File pasta = new File(pastaPath);
 
-        if (!pasta.exists() || !pasta.isDirectory()) {
-            System.out.println("Nenhum produto encontrado. Pasta não existe.");
-            return;
-         }
-
-         File[] arquivosProdutos = pasta.listFiles();
-        if (arquivosProdutos == null || arquivosProdutos.length == 0) {
-         System.out.println("Nenhum produto disponível.");
-         return;
+    if (!pasta.exists() || !pasta.isDirectory()) {
+        System.out.println("Nenhum produto encontrado. Pasta não existe.");
+        return;
     }
 
-        System.out.println("Lista de Produtos Disponíveis:");
-        System.out.println("====================================");
-        
-        for (File arquivo : arquivosProdutos) {
-            if (arquivo.isFile() && arquivo.getName().startsWith("produto_")) {
-                String idLote = arquivo.getName().replace("produto_", "").replace(".txt", "");
-                try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-                    String nomeProduto = reader.readLine();
-                    if (nomeProduto != null && !nomeProduto.trim().isEmpty()) {
-                        System.out.println("ID: " + idLote + " - Produto: " + nomeProduto);
-                    } else {
-                        System.out.println("ID: " + idLote + " - Produto sem nome disponível.");
+    File[] arquivosProdutos = pasta.listFiles();
+    if (arquivosProdutos == null || arquivosProdutos.length == 0) {
+        System.out.println("Nenhum produto disponível.");
+        return;
+    }
+
+    System.out.println("Lista de Produtos Disponíveis:");
+    System.out.println("====================================");
+    
+    for (File arquivo : arquivosProdutos) {
+        if (arquivo.isFile() && arquivo.getName().startsWith("produto_")) {
+            String idLote = arquivo.getName().replace("produto_", "").replace(".txt", "");
+            try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
+                String linha;
+                String nomeProduto = "";
+                String descricaoProduto = "";
+                String precoProduto = "";
+                while ((linha = reader.readLine()) != null) {
+                    if (linha.startsWith("Nome do produto:")) {
+                        nomeProduto = linha.replace("Nome do produto:", "").trim();
+                    } else if (linha.startsWith("Descricao do Produto :")) {
+                        descricaoProduto = linha.replace("Descricao do Produto:", "").trim();
+                    } else if (linha.startsWith("Preco do produto:")) {
+                        precoProduto = linha.replace("Preco do produto:", "").trim();
                     }
-                } catch (IOException e) {
-                    System.err.println("Erro ao ler o arquivo: " + arquivo.getName());
                 }
+                if (!nomeProduto.isEmpty()) {
+                    System.out.println("ID: " + idLote + " - Produto: " + nomeProduto);
+                    System.out.println("Descrição: " + (descricaoProduto.isEmpty() ? "Não disponível" : descricaoProduto));
+                    System.out.println("Preço: " + (precoProduto.isEmpty() ? "Não disponível" : precoProduto));
+                } else {
+                    System.out.println("ID: " + idLote + " - Produto sem nome disponível.");
+                }
+            } catch (IOException e) {
+                System.err.println("Erro ao ler o arquivo: " + arquivo.getName());
             }
         }
     }
+}
+
 
     
 }
