@@ -188,7 +188,7 @@ public class VendaService implements IVendaInterface {
     System.out.println(conteudoRelatorio.toString());
 }
 
-    public void exibeProdutos() {
+public void exibeProdutos() {
     String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
     File pasta = new File(pastaPath);
 
@@ -214,19 +214,23 @@ public class VendaService implements IVendaInterface {
                 String nomeProduto = "";
                 String descricaoProduto = "";
                 String precoProduto = "";
+                String quantidadeDisponivel = "";
                 while ((linha = reader.readLine()) != null) {
                     if (linha.startsWith("Nome do produto:")) {
                         nomeProduto = linha.replace("Nome do produto:", "").trim();
                     } else if (linha.startsWith("Descricao do Produto :")) {
-                        descricaoProduto = linha.replace("Descricao do Produto:", "").trim();
+                        descricaoProduto = linha.replace("Descricao do Produto :", "").trim();
                     } else if (linha.startsWith("Preco do produto:")) {
                         precoProduto = linha.replace("Preco do produto:", "").trim();
+                    } else if (linha.startsWith("quantidade disponivel do produto:")) {
+                        quantidadeDisponivel = linha.replace("quantidade disponivel do produto:", "").trim();
                     }
                 }
                 if (!nomeProduto.isEmpty()) {
                     System.out.println("ID: " + idLote + " - Produto: " + nomeProduto);
                     System.out.println("Descrição: " + (descricaoProduto.isEmpty() ? "Não disponível" : descricaoProduto));
                     System.out.println("Preço: " + (precoProduto.isEmpty() ? "Não disponível" : precoProduto));
+                    System.out.println("Quantidade disponível: " + (quantidadeDisponivel.isEmpty() ? "Não disponível" : quantidadeDisponivel));
                 } else {
                     System.out.println("ID: " + idLote + " - Produto sem nome disponível.");
                 }
@@ -236,7 +240,6 @@ public class VendaService implements IVendaInterface {
         }
     }
 }
-
 
     
 }

@@ -1,0 +1,5 @@
+Nickname: Pedro Ag
+Endereco: Avenida dos Indios, California - Alemanha
+Contato: 5468413268
+Senha: 12345678
+Tipo de usuário: Gerente

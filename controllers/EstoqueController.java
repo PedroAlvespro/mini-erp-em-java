@@ -150,7 +150,7 @@ public class EstoqueController extends EstoqueService {
         try {
             
              if (response == 2) {
-                System.out.println("Produto rejeitado com sucesso!");
+                
                 /*AddEstoque, remove quantidade do estoque, processa venda */
                 addEstoque( idlote, idvenda, response);
             }

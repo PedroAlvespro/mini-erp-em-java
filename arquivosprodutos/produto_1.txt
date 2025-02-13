@@ -1,6 +1,6 @@
 Id do lote do produto: 1
-Nome do produto: Carne de Primeira
-Descricao do Produto : Frigor�fico os Manos da Carne
+Nome do produto: pizza
+Descricao do Produto : aliemnto
 Preco do produto: 13.0
 quantidade inicial do produto: 5.0
-quantidade disponivel do produto: 3.0
+quantidade disponivel do produto: 5.0

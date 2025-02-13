@@ -16,7 +16,7 @@ import interfaces.IEstoque;
 public abstract class EstoqueService implements IEstoque{
 
     public void CadastramentoProduto(int idlote, String nome, String descricao, float preco, double quantidade) throws EstoqueException {
-        if (idlote < 0) throw new EstoqueException("id de lote menor do que 0");
+        if (idlote < 0) throw new EstoqueException("ID de lote menor do que 0.");
         if (nome == null || nome.trim().isEmpty()) throw new EstoqueException("Nome do produto inválido.");
         if (descricao == null || descricao.trim().isEmpty()) throw new EstoqueException("Descrição do produto inválida.");
         if (preco < 0) throw new EstoqueException("Preço do produto inválido.");
@@ -31,21 +31,25 @@ public abstract class EstoqueService implements IEstoque{
             pasta.mkdirs();
         }
 
+        if (arquivo.exists()) {
+            throw new EstoqueException("Já existe um produto com o ID de lote " + idlote + ".");
+        }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))) {
             writer.write("Id do lote do produto: " + idlote);
             writer.newLine();
             writer.write("Nome do produto: " + nome);
             writer.newLine();
-            writer.write("Descricao do Produto : " + descricao);
+            writer.write("Descrição do Produto: " + descricao);
             writer.newLine();
-            writer.write("Preco do produto: " + preco);
+            writer.write("Preço do produto: " + preco);
             writer.newLine();
-            writer.write("quantidade inicial do produto: " + quantidade);  // Guarda a quantidade inicial
+            writer.write("Quantidade inicial do produto: " + quantidade);
             writer.newLine();
-            writer.write("quantidade disponivel do produto: " + quantidade);  // Quantidade disponível
+            writer.write("Quantidade disponível do produto: " + quantidade);
             writer.newLine();
             System.out.println("Arquivo criado com sucesso: " + arquivo.getAbsolutePath());
-            System.out.printf("Produto cadastrado com sucesso!\n", nome);
+            System.out.println("Produto cadastrado com sucesso!");
         } catch (IOException e) {
             System.err.println("Erro ao criar o arquivo: " + e.getMessage());
         }
@@ -98,81 +102,82 @@ public abstract class EstoqueService implements IEstoque{
 
     public void addEstoque(int idlote, int idVenda, int response) throws EstoqueException {
         String pastaVendas = System.getProperty("user.dir") + File.separator + "vendas";
-        File pastaVenda = new File(pastaVendas);
+        File arquivoVenda = new File(pastaVendas, "venda_" + idVenda + ".txt");
+        
+        if (!arquivoVenda.exists()) {
+            throw new EstoqueException("Arquivo de venda com ID " + idVenda + " não encontrado.");
+        }
+
+        double quantidadeVendida = 0;
+        boolean encontrouQuantidade = false;
+        boolean idLoteCorresponde = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(arquivoVenda))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                if (linha.contains("ID do lote: " + idlote)) {
+                    idLoteCorresponde = true;
+                }
+                if (linha.contains("Quantidade Vendida: ")) {
+                    String quantidadeStr = linha.split(": ")[1].trim();
+                    try {
+                        quantidadeVendida = Double.parseDouble(quantidadeStr);
+                        encontrouQuantidade = true;
+                    } catch (NumberFormatException e) {
+                        throw new EstoqueException("Erro ao converter quantidade vendida: " + e.getMessage());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new EstoqueException("Erro ao ler o arquivo de venda: " + e.getMessage());
+        }
+
+        if (!idLoteCorresponde) {
+            throw new EstoqueException("O ID do lote informado não corresponde ao ID da venda.");
+        }
+        if (!encontrouQuantidade) {
+            throw new EstoqueException("Quantidade vendida não encontrada no arquivo de venda.");
+        }
 
         String pastaPath = System.getProperty("user.dir") + File.separator + "arquivosprodutos";
-        File pastaProduto = new File(pastaPath);
+        File arquivoProduto = new File(pastaPath, "produto_" + idlote + ".txt");
 
-        if (response == 2) {  // Venda rejeitada -> devolver estoque
-            File arquivoVenda = new File(pastaVenda, "venda_" + idVenda + ".txt");
+        if (!arquivoProduto.exists()) {
+            throw new EstoqueException("Produto com ID de lote " + idlote + " não encontrado.");
+        }
 
-            if (!arquivoVenda.exists()) {
-                throw new EstoqueException("Arquivo de venda com ID " + idVenda + " não encontrado.");
-            }
+        double quantidadeAtual = 0;
+        boolean encontrouQuantidadeProduto = false;
+        StringBuilder conteudoAtualizado = new StringBuilder();
 
-            double quantidadeVendida = 0;
-            boolean encontrouQuantidade = false;
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(arquivoVenda))) {
-                String linha;
-                while ((linha = reader.readLine()) != null) {
-                    if (linha.contains("Quantidade Vendida: ")) {
-                        String quantidadeStr = linha.split(": ")[1].trim();
-                        try {
-                            quantidadeVendida = Double.parseDouble(quantidadeStr);
-                            encontrouQuantidade = true;
-                        } catch (NumberFormatException e) {
-                            throw new EstoqueException("Erro ao converter quantidade vendida: " + e.getMessage());
-                        }
+        try (BufferedReader readerProduto = new BufferedReader(new FileReader(arquivoProduto))) {
+            String linha;
+            while ((linha = readerProduto.readLine()) != null) {
+                if (linha.startsWith("quantidade disponivel do produto: ")) {
+                    String quantidadeStr = linha.split(": ")[1].trim();
+                    try {
+                        quantidadeAtual = Double.parseDouble(quantidadeStr);
+                        encontrouQuantidadeProduto = true;
+                    } catch (NumberFormatException e) {
+                        throw new EstoqueException("Erro ao converter quantidade do produto: " + e.getMessage());
                     }
+                    linha = "quantidade disponivel do produto: " + (quantidadeAtual + quantidadeVendida);
                 }
-            } catch (IOException e) {
-                throw new EstoqueException("Erro ao ler o arquivo de venda: " + e.getMessage());
+                conteudoAtualizado.append(linha).append(System.lineSeparator());
             }
+        } catch (IOException e) {
+            throw new EstoqueException("Erro ao ler o arquivo do produto: " + e.getMessage());
+        }
 
-            if (!encontrouQuantidade) {
-                throw new EstoqueException("Quantidade vendida não encontrada no arquivo de venda.");
-            }
+        if (!encontrouQuantidadeProduto) {
+            throw new EstoqueException("Quantidade do produto não encontrada no arquivo.");
+        }
 
-            File arquivoProduto = new File(pastaProduto, "produto_" + idlote + ".txt");
-
-            if (!arquivoProduto.exists()) {
-                throw new EstoqueException("Produto com ID de lote " + idlote + " não encontrado.");
-            }
-
-            double quantidadeAtual = 0;
-            boolean encontrouQuantidadeProduto = false;
-            StringBuilder conteudoAtualizado = new StringBuilder();
-
-            try (BufferedReader readerProduto = new BufferedReader(new FileReader(arquivoProduto))) {
-                String linha;
-                while ((linha = readerProduto.readLine()) != null) {
-                    if (linha.startsWith("quantidade disponivel do produto: ")) {
-                        String quantidadeStr = linha.split(": ")[1].trim();
-                        try {
-                            quantidadeAtual = Double.parseDouble(quantidadeStr);
-                            encontrouQuantidadeProduto = true;
-                        } catch (NumberFormatException e) {
-                            throw new EstoqueException("Erro ao converter quantidade do produto: " + e.getMessage());
-                        }
-                        linha = "quantidade disponivel do produto: " + (quantidadeAtual + quantidadeVendida);
-                    }
-                    conteudoAtualizado.append(linha).append(System.lineSeparator());
-                }
-            } catch (IOException e) {
-                throw new EstoqueException("Erro ao ler o arquivo do produto: " + e.getMessage());
-            }
-
-            if (!encontrouQuantidadeProduto) {
-                throw new EstoqueException("Quantidade do produto não encontrada no arquivo.");
-            }
-
-            try (BufferedWriter writerProduto = new BufferedWriter(new FileWriter(arquivoProduto))) {
-                writerProduto.write(conteudoAtualizado.toString());
-                System.out.println("Quantidade devolvida ao estoque com sucesso. Nova quantidade: " + (quantidadeAtual + quantidadeVendida));
-            } catch (IOException e) {
-                throw new EstoqueException("Erro ao atualizar o arquivo do produto: " + e.getMessage());
-            }
+        try (BufferedWriter writerProduto = new BufferedWriter(new FileWriter(arquivoProduto))) {
+            writerProduto.write(conteudoAtualizado.toString());
+            System.out.println("Quantidade devolvida ao estoque com sucesso. Nova quantidade: " + (quantidadeAtual + quantidadeVendida));
+        } catch (IOException e) {
+            throw new EstoqueException("Erro ao atualizar o arquivo do produto: " + e.getMessage());
         }
     }
 
