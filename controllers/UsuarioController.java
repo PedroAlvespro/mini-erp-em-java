@@ -12,7 +12,6 @@ public class UsuarioController extends UsuarioService {
 
         do {
             System.out.println("1 - Cadastrar usuário");
-            System.out.println("2 - Fazer login");
             System.out.println("0 - Sair");
             response = sc.nextInt();
             sc.nextLine();
@@ -20,9 +19,6 @@ public class UsuarioController extends UsuarioService {
             switch (response) {
                 case 1:
                     cadastroUsuario(sc);
-                    break;
-                case 2:
-                    loginUsuario(sc);
                     break;
                 case 0:
                     System.out.println("Sistema encerrado.");
@@ -82,23 +78,7 @@ public class UsuarioController extends UsuarioService {
         }
     }
 
-    private void loginUsuario(Scanner scanner) {
-        System.out.println("Digite seu nickname:");
-        String nickname = scanner.nextLine();
-
-        System.out.println("Digite sua senha:");
-        String senha = scanner.nextLine();
-
-        try {
-            if (validarUsuario(nickname, senha)) {
-                System.out.println("Login realizado com sucesso!");
-            } else {
-                System.out.println("Nickname ou senha incorretos.");
-            }
-        } catch (UsuarioException e) {
-            System.err.println("Erro: " + e.getMessage());
-        }
-    }
+   
 
    
 
